@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Online WYSIWYG editor (CKEditor)</title>
+    <link rel="icon" href="https://www.outsystems.com/Forge_CW/_image.aspx/Q8LvY--6WakOw9afDCuuGaV5ynx8d70JvhH6lsB8rrs=/ckeditor">
+    <!-- Make sure the path to CKEditor is correct. -->
+    <script src="https://cdn.ckeditor.com/4.16.1/full-all/ckeditor.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        @font-face {
+            font-family: "FontAwesome";
+            src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/fonts/fontawesome-webfont.eot?v=4.7.0");
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;   
+        }
+        button.full {
+            width: 99.5%;
+            padding-left: 3%;
+            padding-right: 3%;
+            padding-top: 0.5%;
+            padding-bottom: 0.5%;
+            margin-top: 4px;
+            margin-bottom: 2px;
+            margin-left: 4px;
+            margin-right: 4px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            background-color: #f1f1f1;
+            border: 2px outset;
+            user-select: none;
+        }
+
+        button.full:active {
+            transform: translate(1px, 1px);
+            border: 2px inset;
+        }
+
+        button.full:focus {
+            outline: 1px dashed black;
+        }
+
+        button.full:disabled {
+            pointer-events: none;
+            color: rgb(151, 151, 151);
+        }
+        button.small {
+            padding-left: 0.5%;
+            padding-right: 0.5%;
+            padding-top: 0.5%;
+            padding-bottom: 0.5%;
+            margin-top: 4px;
+            margin-bottom: 2px;
+            margin-left: 4px;
+            margin-right: 4px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            background-color: #f1f1f1;
+            border: 2px outset;
+            user-select: none;
+        }
+
+        button.small:active {
+            transform: translate(1px, 1px);
+            border: 2px inset;
+        }
+
+        button.small:focus {
+            outline: 1px dashed black;
+        }
+
+        button.small:disabled {
+            pointer-events: none;
+            color: rgb(151, 151, 151);
+        }
+        button.big {
+            width: 46.5%;
+            padding-left: 3%;
+            padding-right: 3%;
+            padding-top: 0.5%;
+            padding-bottom: 0.5%;
+            margin-top: 4px;
+            margin-bottom: 2px;
+            margin-left: 4px;
+            margin-right: 4px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            background-color: #f1f1f1;
+            border: 2px outset;
+            user-select: none;
+        }
+
+        button.big:active {
+            transform: translate(1px, 1px);
+            border: 2px inset;
+        }
+
+        button.big:focus {
+            outline: 1px dashed black;
+        }
+
+        button.big:disabled {
+            pointer-events: none;
+            color: rgb(151, 151, 151);
+        }
+        button.med {
+            width: 24%;
+            padding-left: 3%;
+            padding-right: 3%;
+            padding-top: 0.5%;
+            padding-bottom: 0.5%;
+            margin-top: 4px;
+            margin-bottom: 2px;
+            margin-left: 4px;
+            margin-right: 4px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            background-color: #f1f1f1;
+            border: 2px outset;
+            user-select: none;
+        }
+
+        button.med:active {
+            transform: translate(1px, 1px);
+            border: 2px inset;
+        }
+
+        button.med:focus {
+            outline: 1px dashed black;
+        }
+
+        button.med:disabled {
+            pointer-events: none;
+            color: rgb(151, 151, 151);
+        }
+
+        label {
+            user-select: none
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+            -webkit-animation-name: fadeIn;
+            /* Fade in the background */
+            -webkit-animation-duration: 0.4s;
+            animation-name: fadeIn;
+            animation-duration: 0.4s
+        }
+
+        /* Modal Content */
+        .modal-content {
+            position: fixed;
+            bottom: 0;
+            background-color: #cccccc;
+            width: 100%;
+            -webkit-animation-name: slideIn;
+            -webkit-animation-duration: 0.4s;
+            animation-name: slideIn;
+            animation-duration: 0.4s;
+            border: 2px outset;
+        }
+
+        /* The Close Button */
+        .close {
+            color: black;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f1f1f1;
+            border: 2px outset;
+            user-select: none;
+            padding: 10px 10px;
+        }
+        .close:focus{
+            outline: 1px dashed black;
+        }
+        .close:active {
+            transform: translate(1px, 1px);
+            border: 2px inset;
+        }
+        .close:disabled {
+            pointer-events: none;
+            color: rgb(151, 151, 151);
+        }
+        .modal-header {
+            padding: 2px 16px;
+        }
+
+        .modal-body {
+            padding: 2px 16px;
+        }
+
+        .modal-footer {
+            margin-top: 0px;
+            padding: 5px 5px;
+            color: white;
+        }
+
+        /* Add Animation */
+        @-webkit-keyframes slideIn {
+            from {
+                bottom: -300px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0;
+                opacity: 1
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                bottom: -300px;
+                opacity: 0
+            }
+
+            to {
+                bottom: 0;
+                opacity: 1
+            }
+        }
+
+        @-webkit-keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h5>More...</h5>
+            </div>
+            <hr style="margin-top:0; margin-bottom:0;">
+            <div class="modal-body">
+                <input type=checkbox id="saveonline" checked><label style=cursor:pointer;font-family:Arial for="saveonline"> Save automatically online</label> <button class=med type=button id=delonline>Delete local-saved document</button><button class=med type=button id=savenow>Local save now</button> <span id="status" style="font-family:FontAwesome" title="Saved.">&#xf058;</span>
+            </div>
+            <hr style="margin-top:0; margin-bottom:0;">
+            <div class="modal-footer">
+                <button id="ok_btn" class="full">Ok</button>
+            </div>
+        </div>
+
+    </div>
+    <form>
+        <textarea name="editor1" id="editor1">
+                <div style="background:#eeeeee; border:1px solid #cccccc; padding:5px 10px">
+<p style="text-align:center"><span style="font-size:48px"><span style="font-family:Arial,Helvetica,sans-serif">Welcome to CKEditor!<img alt="laugh" src="https://cdn.ckeditor.com/4.15.1/full/plugins/smiley/images/teeth_smile.png" style="height:23px; width:23px" title="laugh" /></span></span></p>
+</div>
+
+            </textarea>
+        <p style="text-align:center">
+            <button id=dnl class=big type=button>Download to your computer <span style="font-family:FontAwesome">&#xf019;</span></button><button id=loadbtn class=big type=button>Load from your computer <span style="font-family:FontAwesome">&#xf093;</span></button><button class="small" type="button" onclick="modal.style.display = 'block'">☰</button>
+        </p>
+        <script>
+            var src = '//cdn.jsdelivr.net/npm/eruda';
+            if (/eruda=true/.test(window.location)) {
+                document.write('<scr' + 'ipt src="' + src + '"></scr' + 'ipt>');
+                document.write('<scr' + 'ipt>eruda.init();</scr' + 'ipt>');
+            }
+            if (localStorage.getItem("_text")) {
+                document.getElementById('editor1').innerHTML = localStorage.getItem("_text")
+            }
+            CKEDITOR.replace('editor1',{
+                "height":window.innerHeight*60/100,
+            
+            });
+
+            var editorData = CKEDITOR.instances.editor1.getData();
+            CKEDITOR.instances.editor1.on('change', function() {
+                document.getElementById('status').title = "Not saved."
+                document.getElementById('status').innerHTML = `<span class="fa-stack"><i class="fa fa-cloud-upload fa-stack-1x"></i><i class="fa fa-close fa-stack-2x" style="color:red;"></i></span>`
+                if (document.getElementById('saveonline').checked) {
+                    console.log('Saving...')
+                    document.getElementById('status').title = "Saving..."
+                    document.getElementById('status').innerHTML = '&#xf0ee;'
+                    setTimeout(function() {
+                        console.log('Saved.');
+                        document.getElementById('status').innerHTML = '&#xf058;';
+                        document.getElementById('status').title = "Saved."
+                    }, 500)
+                    editorData = CKEDITOR.instances.editor1.getData();
+                    localStorage.setItem("_text", editorData)
+                }
+            })
+            CKEDITOR.on('instanceReady', function() {
+                document.getElementById("cke_19").remove();
+                document.getElementById("cke_18").remove();
+                document.getElementsByClassName('cke_toolbar_separator')[0].remove()
+            });
+
+            function downloadToFile(content, filename, contentType) {
+                const a = document.createElement("a");
+                const file = new Blob([content], {
+                    type: contentType
+                });
+
+                a.href = URL.createObjectURL(file);
+                a.download = filename;
+                a.click();
+
+                URL.revokeObjectURL(a.href);
+            };
+            document.getElementById('dnl').onclick = function() {
+                var filename = prompt('Enter full file name (with extension .cke):')
+                if (filename) {
+                    downloadToFile(CKEDITOR.instances.editor1.getData(), filename, 'text/plain')
+                }
+            }
+
+            var loadbtn = document.getElementById("loadbtn")
+            loadbtn.onclick = function(event) {
+                var inp = document.createElement('input')
+                inp.setAttribute('type', 'file')
+                inp.setAttribute('accept', '.cke')
+                inp.addEventListener('change', function(ev) {
+                    var input = ev.target;
+                    var reader = new FileReader();
+                    reader.onload = function() {
+                        var text = reader.result;
+                        CKEDITOR.instances.editor1.setData(text)
+                    }
+                    reader.readAsText(input.files[0])
+                })
+                inp.click()
+            }
+            document.getElementById('delonline').onclick = function() {
+                var quest = confirm('Are you sure you want to delete your document?')
+                if (quest) {
+                    document.getElementById('saveonline').checked = false
+                    localStorage.removeItem('_text')
+                    window.open('#delete', '_self')
+                    history.go(0)
+                }
+            }
+            document.getElementById('savenow').onclick = function() {
+                console.log('Saving...')
+                document.getElementById('status').title = "Saving..."
+                document.getElementById('status').innerHTML = '&#xf0ee;'
+                setTimeout(function() {
+                    console.log('Saved.');
+                    document.getElementById('status').innerHTML = '&#xf058;';
+                    document.getElementById('status').title = "Saved."
+                }, 500)
+                var editorData = CKEDITOR.instances.editor1.getData();
+                localStorage.setItem("_text", editorData)
+            }
+            var modal = document.getElementById("myModal");
+            var btn = document.getElementById("myBtn");
+            var span = document.getElementsByClassName("close")[0];
+            var modal_cnt = document.getElementsByClassName("modal-content")[0];
+            span.onclick = function() {
+                close_modal()
+            }
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    close_modal()
+                }
+            }
+            document.getElementById("ok_btn").onclick = function() {
+                close_modal()
+            }
+            function close_modal() {
+                modal_cnt.style.transition = "0.4s"
+                modal_cnt.style.bottom = "-300px"
+                modal.style.transition = "0.4s"
+                modal.style.opacity = "0"
+                setTimeout(function() {
+                    modal_cnt.style.bottom = "0px"
+                    modal.style.opacity = "1"
+                    modal.style.display = "none"
+                }, 400)
+            }
+        </script>
+    </form>
+
+</body>
+
+</html>
