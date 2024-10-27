@@ -330,7 +330,7 @@
             CKEDITOR.on('instanceReady', function() {
                 document.getElementById("cke_19").remove();
                 document.getElementById("cke_18").remove();
-                document.getElementById("cke_notifications_area_editor1").remove() // Remove annoying warning
+                setTimeout(() => {document.getElementById("cke_notifications_area_editor1").remove()}, 100) // Remove annoying warning
                 document.getElementsByClassName('cke_toolbar_separator')[0].remove()
             });
 
